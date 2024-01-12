@@ -44,4 +44,14 @@ public class PostController {
     public String deletePost(@PathVariable(name = "id") Integer id){
         return postService.deletePost(id);
     }
+
+    @GetMapping("post/user/{user_id}")
+    public List<Post> getPostByUser(@PathVariable(name = "user_id") Integer user_id){
+        return postService.getPostByUser(user_id);
+    }
+
+    @GetMapping("post/category/{category_id}")
+    public List<Post> getPostByCategory(@PathVariable(name = "category_id") Integer category_id){
+        return postService.getPostByCategory(category_id);
+    }
 }

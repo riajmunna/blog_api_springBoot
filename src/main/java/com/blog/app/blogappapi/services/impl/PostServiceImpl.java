@@ -70,13 +70,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPostByCategory(Integer category_id) {
-
-        return null;
+        Category category = categoryRepository.findById(category_id).orElseThrow(()
+                -> new UserNotFoundException("Post not found with category ID: " + category_id));
+        return postRepository.findByCategory(category);
     }
 
     @Override
     public List<Post> getPostByUser(Integer user_id) {
-        return null;
+        User user = userRepository.findById(user_id).orElseThrow(()
+                -> new UserNotFoundException("Post not found with user ID: " + user_id));
+        return postRepository.findByUser(user);
     }
 
     @Override
