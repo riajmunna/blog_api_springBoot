@@ -1,11 +1,15 @@
 package com.blog.app.blogappapi.controllers;
 
 import com.blog.app.blogappapi.entities.Post;
+import com.blog.app.blogappapi.services.FileService;
 import com.blog.app.blogappapi.services.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -13,6 +17,12 @@ import java.util.List;
 public class PostController {
     @Autowired
     PostService postService;
+
+    @Autowired
+    FileService fileService;
+
+    @Value("${project.image}")
+    private String path;
 
     @PostMapping("post/{user_id}/{category_id}")
     public Post createPost(@Valid @RequestBody Post post,
@@ -53,5 +63,17 @@ public class PostController {
     @GetMapping("post/category/{category_id}")
     public List<Post> getPostByCategory(@PathVariable(name = "category_id") Integer category_id){
         return postService.getPostByCategory(category_id);
+    }
+
+    @PostMapping("post/image/upload/{post_id}")
+    public Post uploadPostImage(
+            @PathVariable(name = "post_id") Integer post_id,
+            @RequestParam("image") MultipartFile image
+    ) throws IOException {
+        String filename = this.fileService.uploadImage(path, image);
+        Post post = postService.getPost(post_id);
+        post.setImage(filename);
+        Post updatedPost = postService.updatePost(post, post_id, post.getUser().getId(),post.getCategory().getId());
+        return updatedPost;
     }
 }
