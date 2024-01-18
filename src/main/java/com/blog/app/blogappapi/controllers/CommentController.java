@@ -14,11 +14,11 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
-    @PostMapping("comment/{user_id}/{post_id}")
+    @PostMapping("comment")
     public Comment createComment(
             @Valid @RequestBody Comment comment,
-            @PathVariable(name = "user_id") Integer user_id,
-            @PathVariable(name = "post_id") Integer post_id
+            @RequestParam() Integer user_id,
+            @RequestParam() Integer post_id
     ){
         return commentService.createComment(comment, user_id, post_id);
     }
@@ -31,5 +31,36 @@ public class CommentController {
     @GetMapping("comment/{id}")
     public Comment getComment(@PathVariable(name = "id") Integer id){
         return commentService.getComment(id);
+    }
+
+    @PutMapping("comment/{id}")
+    public Comment updateComment(
+            @Valid
+            @RequestBody Comment comment,
+            @PathVariable(name = "id") Integer id,
+            @RequestParam() Integer user_id,
+            @RequestParam() Integer post_id
+    ){
+        return commentService.updateComment(comment, id, user_id, post_id);
+    }
+
+    @DeleteMapping("comment/{id}")
+    public String deleteComment(@PathVariable(name = "id") Integer id){
+        return commentService.deleteComment(id);
+    }
+
+    @GetMapping("comment/user/{id}")
+    public List <Comment> getCommentsByUser(@PathVariable(name = "id") Integer id){
+        return commentService.getCommentsByUser(id);
+    }
+
+    @GetMapping("comment/post/{id}")
+    public List <Comment> getCommentsByPost(@PathVariable(name = "id") Integer id){
+        return commentService.getCommentsByPost(id);
+    }
+
+    @GetMapping("comment/search/{keyword}")
+    public List <Comment> getCommentsBySearch(@PathVariable(name = "keyword") String keyword){
+        return commentService.getCommentsBySearch(keyword);
     }
 }

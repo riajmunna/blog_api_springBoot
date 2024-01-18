@@ -48,21 +48,46 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment updateComment(Comment comment, Integer comment_id, Integer user_id, Integer post_id) {
-        return null;
+        User user = userRepository.findById(user_id).orElseThrow(()
+                -> new UserNotFoundException("User not found with ID: " + user_id));
+        Post post = postRepository.findById(post_id).orElseThrow(()
+                -> new UserNotFoundException("Post not found with ID: " + post_id));
+        Comment comment1 = commentRepository.findById(comment_id).orElseThrow(()
+                -> new UserNotFoundException("Comment not found with ID: " + comment_id));
+        comment1.setPost(post);
+        comment1.setUser(user);
+        comment1.setComment(comment.getComment());
+        return comment1;
     }
 
     @Override
     public String deleteComment(Integer comment_id) {
-        return null;
+        Comment comment = commentRepository.findById(comment_id).orElseThrow(()
+                -> new UserNotFoundException("Comment not found with ID: " + comment_id));
+        if(comment != null){
+            commentRepository.deleteById(comment.getId());
+            return "Successfully Deleted";
+        }else{
+            return "Please Try Again";
+        }
     }
 
     @Override
     public List<Comment> getCommentsByUser(Integer user_id) {
-        return null;
+        User user = userRepository.findById(user_id).orElseThrow(()
+                -> new UserNotFoundException("User not found with ID: " + user_id));
+        return commentRepository.findByUser(user);
     }
 
     @Override
     public List<Comment> getCommentsByPost(Integer post_id) {
+        Post post = postRepository.findById(post_id).orElseThrow(()
+                -> new UserNotFoundException("Post not found with ID: " + post_id));
+        return commentRepository.findByPost(post);
+    }
+
+    @Override
+    public List<Comment> getCommentsBySearch(String keyword) {
         return null;
     }
 }

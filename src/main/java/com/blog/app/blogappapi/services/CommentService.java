@@ -12,4 +12,6 @@ public interface CommentService {
     String deleteComment(Integer comment_id);
     List<Comment> getCommentsByUser(Integer user_id);
     List<Comment> getCommentsByPost(Integer post_id);
+
+    List<Comment> getCommentsBySearch(String keyword);
 }
