@@ -9,7 +9,10 @@ import com.blog.app.blogappapi.repositories.PostRepository;
 import com.blog.app.blogappapi.repositories.UserRepository;
 import com.blog.app.blogappapi.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 @Service
@@ -27,8 +30,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPosts() {
-        return postRepository.findAll();
+    public List<Post> getPosts(Integer pageNumber, Integer pageSize, String sortBy) {
+        int zeroBasedPageNumber = pageNumber - 1;
+        Pageable pageable = PageRequest.of(zeroBasedPageNumber, pageSize, Sort.by(sortBy));
+        Page<Post> pagePost = postRepository.findAll(pageable);
+        List<Post> posts = pagePost.getContent();
+        return pagePost.getContent();
     }
 
     @Override
@@ -84,6 +91,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> searchPost(String keyword) {
-        return null;
+        return postRepository.findByKeyword(keyword);
     }
 }
