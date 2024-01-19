@@ -46,8 +46,12 @@ public class PostController {
     }
 
     @GetMapping("posts")
-    public List<Post> getPosts(){
-        return postService.getPosts();
+    public List<Post> getPosts(
+            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy
+    ){
+        return postService.getPosts(pageNumber, pageSize, sortBy);
     }
 
     @DeleteMapping("post/{id}")
@@ -75,5 +79,9 @@ public class PostController {
         post.setImage(filename);
         Post updatedPost = postService.updatePost(post, post_id, post.getUser().getId(),post.getCategory().getId());
         return updatedPost;
-    }
 }
+
+@GetMapping("post/search/{keyword}")
+    public List<Post> getPostByKeyword(@PathVariable(name = "keyword") String keyword){
+        return postService.searchPost(keyword);
+    }
