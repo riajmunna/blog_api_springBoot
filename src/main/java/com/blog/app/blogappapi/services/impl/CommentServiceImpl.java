@@ -88,6 +88,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getCommentsBySearch(String keyword) {
-        return null;
+        return commentRepository.findBySearch(keyword);
     }
 }
